@@ -1,0 +1,29 @@
+from scipy.stats import norm
+import numpy as np
+import scipy.stats as st
+import matplotlib.pyplot as plt
+from statsmodels.distributions.empirical_distribution import ECDF
+
+N = [10, 25, 50, 100, 1000, 10000]
+size = 10000
+X = norm.rvs(size = size)
+
+for i in range(len(N)):
+    n = N[i]
+    ecdf = ECDF(X[:n])
+
+    plt.step(ecdf.x, ecdf.y, label = 'empirical CDF')
+    plt.ylabel('$F(x)$')
+    plt.xlabel('$X$')
+#===============
+#theoretical
+    x = np.linspace(st.norm.ppf(0.001, loc=0, scale=1),  st.norm.ppf(0.999, loc=0, scale=1), n)
+    cdf = norm.cdf(x)
+    plt.plot(x, cdf, label = 'teoretical CDF')
+    plt.title("Эмпирическая функция распределения")
+    plt.scatter(X[:n], np.zeros_like(X[:n]), s = 6, alpha = 0.2)
+    plt.text (-2.9, 0.84, u"N=")
+    plt.text (-2.5, 0.84, n)
+    plt.legend()
+    plt.grid()
+    plt.show()
